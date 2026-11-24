@@ -1,0 +1,120 @@
+{
+  "_설명": "운영 대상 서비스 목록. 새 서비스를 배포하면 여기에 한 줄 추가한다. status: active | retired. money: none | donation | affiliate | ads | paid",
+  "accounts": {
+    "_설명": "GitHub 계정별로 비공개 리포를 읽을 토큰(ops 리포 Secrets 이름). 공개 리포는 토큰 없이 읽힌다.",
+    "leehayoni": "LEEHAYONI_TOKEN",
+    "arklyonoff-code": "ARKLY_TOKEN"
+  },
+  "services": [
+    {
+      "id": "dolbom-map",
+      "name": "부모님 돌봄지도",
+      "day": 1,
+      "deployed": "2026-11-18",
+      "status": "active",
+      "url": "https://dolbom-map-beta.vercel.app",
+      "pages": [
+        "/"
+      ],
+      "repo": "leehayoni/dolbom-map",
+      "ga": null,
+      "money": "none"
+    },
+    {
+      "id": "menu-photo-shop",
+      "name": "메뉴사진 수선",
+      "day": 2,
+      "deployed": "2026-11-19",
+      "status": "retired",
+      "url": "https://menu-photo-shop.arkly-onoff.workers.dev",
+      "repo": "leehayoni/menu-photo-shop",
+      "note": "2026-11-22 접기로 결정"
+    },
+    {
+      "id": "forklift-run",
+      "name": "지게차런",
+      "day": 3,
+      "deployed": "2026-11-20",
+      "status": "active",
+      "url": "https://forklift-run.vercel.app",
+      "pages": [
+        "/"
+      ],
+      "repo": "leehayoni/forklift-run",
+      "ga": null,
+      "money": "donation",
+      "api": [
+        {
+          "name": "커피 버튼",
+          "path": "/api/coffee?stats",
+          "expect": {
+            "enabled": true
+          }
+        },
+        {
+          "name": "기록판",
+          "path": "/api/scores"
+        }
+      ]
+    },
+    {
+      "id": "kimjang",
+      "name": "김장 셈법",
+      "day": 5,
+      "deployed": "2026-11-22",
+      "status": "active",
+      "url": "https://kimjang-zeta.vercel.app",
+      "pages": [
+        "/"
+      ],
+      "repo": null,
+      "ga": null,
+      "money": "none",
+      "seasonEnds": "2026-12-31"
+    },
+    {
+      "id": "goleu",
+      "name": "Goleu (스택 추천 + LLM 비용 계산기)",
+      "day": 6,
+      "deployed": "2026-11-23",
+      "status": "active",
+      "url": "https://goleu.vercel.app",
+      "pages": [
+        "/",
+        "/build",
+        "/llm-cost"
+      ],
+      "repo": "arklyonoff-code/Goleu-AI",
+      "ga": "G-ZCZ9BMNMG0",
+      "money": "affiliate",
+      "api": [
+        {
+          "name": "스택 추천 API",
+          "url": "https://golueai-api.arkly-onoff.workers.dev/ai-stack",
+          "method": "POST",
+          "body": {
+            "description": "RAG chatbot over docs",
+            "mau": 1000,
+            "priority": "balanced",
+            "language": "python"
+          },
+          "expectPath": "cost.total"
+        }
+      ]
+    },
+    {
+      "id": "mulgil",
+      "name": "물길 원정대",
+      "day": 7,
+      "deployed": "2026-11-24",
+      "status": "active",
+      "url": "https://mulgil-nu.vercel.app",
+      "pages": [
+        "/"
+      ],
+      "repo": "leehayoni/mulgil-quest",
+      "ga": null,
+      "money": "none"
+    }
+  ]
+}
