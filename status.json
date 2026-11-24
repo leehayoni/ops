@@ -1,0 +1,178 @@
+{
+  "checkedAt": "2026-11-24T03:06:29.493Z",
+  "results": [
+    {
+      "id": "dolbom-map",
+      "name": "부모님 돌봄지도",
+      "url": "https://dolbom-map-beta.vercel.app",
+      "status": "active",
+      "pages": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 330
+        }
+      ],
+      "api": [],
+      "findings": [
+        {
+          "level": "info",
+          "check": "ga",
+          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+        },
+        {
+          "level": "warn",
+          "check": "repo-access",
+          "msg": "리포 leehayoni/dolbom-map 읽기 실패(404) → 비공개라면 ops Secrets에 LEEHAYONI_TOKEN 필요"
+        }
+      ]
+    },
+    {
+      "id": "menu-photo-shop",
+      "name": "메뉴사진 수선",
+      "url": "https://menu-photo-shop.arkly-onoff.workers.dev",
+      "status": "retired",
+      "pages": [],
+      "api": [],
+      "findings": []
+    },
+    {
+      "id": "forklift-run",
+      "name": "지게차런",
+      "url": "https://forklift-run.vercel.app",
+      "status": "active",
+      "pages": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 120
+        }
+      ],
+      "api": [
+        {
+          "name": "커피 버튼",
+          "status": 200,
+          "ms": 672
+        },
+        {
+          "name": "기록판",
+          "status": 200,
+          "ms": 808
+        }
+      ],
+      "findings": [
+        {
+          "level": "info",
+          "check": "ga",
+          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+        },
+        {
+          "level": "warn",
+          "check": "repo-access",
+          "msg": "리포 leehayoni/forklift-run 읽기 실패(404) → 비공개라면 ops Secrets에 LEEHAYONI_TOKEN 필요"
+        }
+      ]
+    },
+    {
+      "id": "kimjang",
+      "name": "김장 셈법",
+      "url": "https://kimjang-zeta.vercel.app",
+      "status": "active",
+      "pages": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 173
+        }
+      ],
+      "api": [],
+      "findings": [
+        {
+          "level": "info",
+          "check": "ga",
+          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+        },
+        {
+          "level": "info",
+          "check": "no-repo",
+          "msg": "GitHub 리포 없음 → 코드 백업·피드백 이슈 수집이 안 됨"
+        }
+      ]
+    },
+    {
+      "id": "goleu",
+      "name": "Goleu (스택 추천 + LLM 비용 계산기)",
+      "url": "https://goleu.vercel.app",
+      "status": "active",
+      "pages": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 168
+        },
+        {
+          "path": "/build",
+          "status": 200,
+          "ms": 38
+        },
+        {
+          "path": "/llm-cost",
+          "status": 200,
+          "ms": 44
+        }
+      ],
+      "api": [
+        {
+          "name": "스택 추천 API",
+          "status": 200,
+          "ms": 186,
+          "asOf": "2026-11-23"
+        }
+      ],
+      "findings": [
+        {
+          "level": "warn",
+          "check": "policy",
+          "msg": "Vercel Hobby(비상업 전용)에서 수익 모델 'affiliate' 운영 중 → 프로젝트 정지 위험. Cloudflare Pages 이전 필요"
+        }
+      ],
+      "repo": {
+        "name": "arklyonoff-code/Goleu-AI",
+        "private": false,
+        "lastCommit": "2026-11-24T02:00:18Z",
+        "openUserIssues": 0,
+        "newUserIssues7d": 0,
+        "issues": []
+      }
+    },
+    {
+      "id": "mulgil",
+      "name": "물길 원정대",
+      "url": "https://mulgil-nu.vercel.app",
+      "status": "active",
+      "pages": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 63
+        }
+      ],
+      "api": [],
+      "findings": [
+        {
+          "level": "info",
+          "check": "ga",
+          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+        }
+      ],
+      "repo": {
+        "name": "leehayoni/mulgil-quest",
+        "private": false,
+        "lastCommit": "2026-11-24T02:38:13Z",
+        "openUserIssues": 0,
+        "newUserIssues7d": 0,
+        "issues": []
+      }
+    }
+  ]
+}
