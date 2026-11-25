@@ -1,15 +1,15 @@
 # 서비스 운영 상태
 
-점검 시각: 2026-11-24T03:06:29.493Z (UTC)
+점검 시각: 2026-11-25T08:35:19.283Z (UTC)
 
 | 서비스 | 상태 | 페이지 | API | 리포 (최근 커밋 · 열린 신고) |
 |---|---|---|---|---|
-| [부모님 돌봄지도](https://dolbom-map-beta.vercel.app) | 🟡 주의 | / 200 (330ms) | - | - |
+| [부모님 돌봄지도](https://dolbom-map-beta.vercel.app) | 🟡 주의 | / 200 (314ms) | - | - |
 | [메뉴사진 수선](https://menu-photo-shop.arkly-onoff.workers.dev) | ⚫ 접음 | - | - | - |
-| [지게차런](https://forklift-run.vercel.app) | 🟡 주의 | / 200 (120ms) | 커피 버튼 200<br>기록판 200 | - |
-| [김장 셈법](https://kimjang-zeta.vercel.app) | 🟢 정상 | / 200 (173ms) | - | - |
-| [Goleu (스택 추천 + LLM 비용 계산기)](https://goleu.vercel.app) | 🟡 주의 | / 200 (168ms)<br>/build 200 (38ms)<br>/llm-cost 200 (44ms) | 스택 추천 API 200 | arklyonoff-code/Goleu-AI · 2026-11-24 · 0건 |
-| [물길 원정대](https://mulgil-nu.vercel.app) | 🟢 정상 | / 200 (63ms) | - | leehayoni/mulgil-quest · 2026-11-24 · 0건 |
+| [지게차런](https://forklift-run.vercel.app) | 🟡 주의 | / 200 (155ms) | 커피 버튼 200<br>기록판 200 | - |
+| [김장 셈법](https://kimjang-zeta.vercel.app) | 🟢 정상 | / 200 (174ms) | - | - |
+| [Goleu (스택 추천 + LLM 비용 계산기)](https://goleu.vercel.app) | 🟡 주의 | / 200 (321ms)<br>/build 200 (136ms)<br>/llm-cost 200 (145ms) | 스택 추천 API 200 | arklyonoff-code/Goleu-AI · 2026-11-25 · 0건 |
+| [물길 원정대](https://mulgil-nu.vercel.app) | 🟢 정상 | / 200 (170ms) | - | leehayoni/mulgil-quest · 2026-11-24 · 0건 |
 
 ## 발견 사항
 
