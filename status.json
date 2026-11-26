@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-25T08:35:19.283Z",
+  "checkedAt": "2026-11-26T08:18:34.244Z",
   "results": [
     {
       "id": "dolbom-map",
@@ -10,7 +10,7 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 314
+          "ms": 180
         }
       ],
       "api": [],
@@ -45,19 +45,19 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 155
+          "ms": 123
         }
       ],
       "api": [
         {
           "name": "커피 버튼",
           "status": 200,
-          "ms": 690
+          "ms": 669
         },
         {
           "name": "기록판",
           "status": 200,
-          "ms": 788
+          "ms": 649
         }
       ],
       "findings": [
@@ -82,7 +82,7 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 174
+          "ms": 148
         }
       ],
       "api": [],
@@ -108,24 +108,24 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 321
+          "ms": 76
         },
         {
           "path": "/build",
           "status": 200,
-          "ms": 136
+          "ms": 128
         },
         {
           "path": "/llm-cost",
           "status": 200,
-          "ms": 145
+          "ms": 21
         }
       ],
       "api": [
         {
           "name": "스택 추천 API",
           "status": 200,
-          "ms": 114,
+          "ms": 115,
           "asOf": "2026-11-23"
         }
       ],
@@ -154,7 +154,7 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 170
+          "ms": 342
         }
       ],
       "api": [],
@@ -168,7 +168,7 @@
       "repo": {
         "name": "leehayoni/mulgil-quest",
         "private": false,
-        "lastCommit": "2026-11-24T02:38:13Z",
+        "lastCommit": "2026-11-26T02:31:48Z",
         "openUserIssues": 0,
         "newUserIssues7d": 0,
         "issues": []
