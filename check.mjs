@@ -57,7 +57,7 @@ function sameOriginScripts(html, base) {
 
 async function checkService(s) {
   const findings = []; // { level: fail|warn|info, check, msg }
-  const add = (level, check, msg) => findings.push({ level, check, msg });
+  const add = (level, check, msg, fix) => findings.push({ level, check, msg, ...(fix ? { fix } : {}) });
   const result = { id: s.id, name: s.name, url: s.url, status: s.status, pages: [], api: [], findings };
 
   if (s.status !== "active") return result;
@@ -68,7 +68,7 @@ async function checkService(s) {
     const url = new URL(p, s.url).href;
     const r = await get(url);
     result.pages.push({ path: p, status: r.status, ms: r.ms });
-    if (!r.ok) add("fail", `down:${p}`, `${p} 응답 실패 (${r.status || r.error})`);
+    if (!r.ok) add("fail", `down:${p}`, `${p} 응답 실패 (${r.status || r.error})`, "배포 대시보드에서 최근 배포 실패 여부 확인 후 재배포");
     else if (r.ms > SLOW_MS) add("warn", `slow:${p}`, `${p} 응답 ${r.ms}ms (느림)`);
     if (!firstHtml && r.ok) firstHtml = r.text;
   }
@@ -82,11 +82,55 @@ async function checkService(s) {
     }
   }
 
+  // 2.5) 성장 기본기: 방문자 측정 · 링크 미리보기 · 검색 등록 · 포털
+  if (firstHtml) {
+    const vercelAnalytics = firstHtml.includes("/_vercel/insights/script.js");
+    const cfAnalytics = /static\.cloudflareinsights\.com|cf-beacon/i.test(firstHtml);
+    const gaTag = /googletagmanager\.com\/gtag|gtag\(/i.test(bundle);
+    if (vercelAnalytics) {
+      const r = await get(new URL("/_vercel/insights/script.js", s.url).href);
+      if (!r.ok) add("warn", "analytics-off", `Vercel Web Analytics가 꺼져 있음 (스크립트 ${r.status || r.error}) → 방문자 수가 0으로 쌓이는 중`,
+        "Vercel → 이 프로젝트 → Analytics 탭 → Enable (무료)");
+    } else if (!cfAnalytics && !gaTag && !s.ga) {
+      add("warn", "no-analytics", "방문자 측정 도구가 없음 → 이 서비스는 판정할 숫자가 안 쌓임",
+        "Vercel이면 Analytics 탭에서 Enable 후 index.html에 스크립트 추가, Cloudflare면 Web Analytics 켜기");
+    }
+
+    const og = firstHtml.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+      || firstHtml.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    if (!og) {
+      add("warn", "og-image", "링크 미리보기 이미지(og:image)가 없음 → 카톡·Threads에 공유하면 글자만 보임",
+        "1200×630 이미지를 만들어 <meta property=\"og:image\" content=\"https://…/og.png\"> 추가");
+    } else {
+      const r = await get(new URL(og[1], s.url).href);
+      if (!r.ok) add("warn", "og-image", `미리보기 이미지 주소가 열리지 않음 (${r.status || r.error}): ${og[1]}`, "이미지 파일이 배포에 포함됐는지 확인");
+    }
+
+    if (s.seo) {
+      for (const f of ["robots.txt", "sitemap.xml"]) {
+        const r = await get(new URL("/" + f, s.url).href);
+        const looksHtml = r.ok && /<html/i.test(r.text.slice(0, 500));
+        if (!r.ok || looksHtml) add("warn", `seo:${f}`, `${f} 파일이 없음${looksHtml ? " (앱 화면이 대신 나옴)" : ""} → 검색엔진이 페이지를 찾기 어려움`, `public/${f} 추가 후 재배포`);
+      }
+      if (!s.searchConsole) add("info", "search-console", "Google Search Console 등록 여부가 services.json에 기록돼 있지 않음",
+        "등록·인증했으면 services.json에 \"searchConsole\": \"YYYY-MM-DD\" 추가");
+    }
+  }
+  for (const pt of s.portals || []) {
+    const label = { review: "심사 중", live: "출시됨", rejected: "반려", draft: "준비 중" }[pt.status] || pt.status;
+    if (pt.status === "rejected") add("warn", `portal:${pt.name}`, `${pt.name} ${label}${pt.note ? ` — ${pt.note}` : ""}`, "반려 사유 확인 후 수정해서 재제출");
+    else if (pt.status === "review") {
+      const days = pt.since ? Math.floor((now - new Date(pt.since)) / 864e5) : null;
+      add(days != null && days > 7 ? "warn" : "info", `portal:${pt.name}`, `${pt.name} ${label}${days != null ? ` (${days}일째)` : ""}`,
+        days != null && days > 7 ? "개발자 포털에서 진행 상황 확인" : undefined);
+    }
+  }
+  result.portals = s.portals || [];
+
   // 3) GA 측정
   if (s.ga) {
-    if (bundle && !bundle.includes(s.ga)) add("fail", "ga", `배포본에 GA ID(${s.ga})가 없음 → 방문·이벤트가 기록되지 않는 중`);
+    if (bundle && !bundle.includes(s.ga)) add("fail", "ga", `배포본에 GA ID(${s.ga})가 없음 → 방문·이벤트가 기록되지 않는 중`, "빌드 환경변수에 GA ID가 들어갔는지 확인 후 재배포");
   } else {
-    add("info", "ga", "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)");
   }
 
   // 4) 수익 모델 vs 호스팅 정책
@@ -94,7 +138,7 @@ async function checkService(s) {
   const onHobby = host.endsWith(".vercel.app");
   const moneyFound = MONEY_PATTERNS.test(bundle);
   if (onHobby && COMMERCIAL.has(s.money)) {
-    add("warn", "policy", `Vercel Hobby(비상업 전용)에서 수익 모델 '${s.money}' 운영 중 → 프로젝트 정지 위험. Cloudflare Pages 이전 필요`);
+    add("warn", "policy", `Vercel Hobby(비상업 전용)에서 수익 모델 '${s.money}' 운영 중 → 프로젝트 정지 위험`, "Cloudflare Pages(무료, 상업 이용 가능)로 이전");
   }
   if (moneyFound && !COMMERCIAL.has(s.money)) {
     add("warn", "money-drift", `배포본에서 제휴/광고 링크 패턴 감지, services.json의 money='${s.money}'와 다름`);
@@ -145,7 +189,7 @@ async function checkService(s) {
         issues: userIssues.slice(0, 10).map((i) => ({ title: i.title, labels: i.labels.map((l) => l.name), created: i.created_at, url: i.html_url })),
       };
       const errs = userIssues.filter((i) => i.labels.some((l) => ["error", "down"].includes(l.name)));
-      if (errs.length) add("fail", "user-errors", `사용자 신고 에러/다운 이슈 ${errs.length}건 열림 (${s.repo})`);
+      if (errs.length) add("fail", "user-errors", `사용자 신고 에러/다운 이슈 ${errs.length}건 열림 (${s.repo})`, "GitHub 이슈 확인");
     }
   }
 
@@ -162,6 +206,12 @@ for (const s of services) results.push(await checkService(s));
 // ---- 출력 ----
 const icon = { fail: "🔴", warn: "🟡", info: "⚪" };
 const worst = (r) => (r.status !== "active" ? "retired" : r.findings.some((f) => f.level === "fail") ? "fail" : r.findings.some((f) => f.level === "warn") ? "warn" : "ok");
+const rank = { fail: 0, warn: 1, info: 2 };
+for (const r of results) {
+  r.state = worst(r);
+  const top = [...r.findings].filter((f) => f.fix).sort((a, b) => rank[a.level] - rank[b.level])[0];
+  r.next = top ? { level: top.level, msg: top.msg, fix: top.fix } : null;
+}
 writeFileSync("status.json", JSON.stringify({ checkedAt: now.toISOString(), results }, null, 2));
 
 let md = `# 서비스 운영 상태\n\n점검 시각: ${now.toISOString()} (UTC)\n\n| 서비스 | 상태 | 페이지 | API | 리포 (최근 커밋 · 열린 신고) |\n|---|---|---|---|---|\n`;

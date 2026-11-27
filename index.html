@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 서비스 상태 · ops</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root { --bg:#f6f5f2; --card:#fff; --ink:#17191c; --sub:#646b72; --line:#e6e3dc;
+          --red:#d93a2b; --red-soft:#fdecea; --yel:#c98a00; --yel-soft:#fff6dd; --grn:#1f8a4c; --grn-soft:#e5f5ec; --gray:#9aa0a6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#121417; --card:#1b1e22; --ink:#eceef0; --sub:#9aa1a8; --line:#2a2e33;
+            --red-soft:#3a1d1a; --yel-soft:#3a2f12; --grn-soft:#15301f; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif; line-height:1.55; word-break:keep-all; }
+  .wrap { max-width:860px; margin:0 auto; padding:28px 18px 60px; }
+  header h1 { font-size:24px; letter-spacing:-.02em; margin:0; }
+  .meta { color:var(--sub); font-size:14px; margin-top:4px; }
+  .meta.stale { color:var(--red); font-weight:700; }
+  .summary { display:flex; gap:10px; margin:18px 0 26px; flex-wrap:wrap; }
+  .pill { background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-size:14px; font-weight:700; }
+  h2 { font-size:17px; margin:0 0 10px; }
+  .todo { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:6px 0; margin-bottom:28px; }
+  .todo li { list-style:none; display:grid; grid-template-columns:22px 1fr; gap:8px; padding:12px 16px; border-top:1px solid var(--line); }
+  .todo li:first-child { border-top:0; }
+  .todo ol { margin:0; padding:0; }
+  .todo b { font-weight:800; }
+  .todo .fix { font-size:14px; color:var(--sub); margin-top:2px; }
+  .todo .empty { padding:14px 16px; color:var(--sub); }
+  .dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-top:6px; }
+  .dot.fail { background:var(--red); } .dot.warn { background:var(--yel); } .dot.ok { background:var(--grn); } .dot.retired, .dot.info { background:var(--gray); }
+  .grid { display:grid; gap:12px; }
+  @media (min-width:720px) { .grid { grid-template-columns:1fr 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; }
+  .card.fail { border-color:var(--red); }
+  .row { display:flex; align-items:center; gap:8px; }
+  .row .dot { margin-top:0; }
+  .card h3 { margin:0; font-size:16px; flex:1; }
+  .card h3 a { color:inherit; text-decoration:none; }
+  .card h3 a:hover { text-decoration:underline; }
+  .state { font-size:12px; font-weight:800; padding:2px 8px; border-radius:6px; }
+  .state.fail { background:var(--red-soft); color:var(--red); } .state.warn { background:var(--yel-soft); color:var(--yel); }
+  .state.ok { background:var(--grn-soft); color:var(--grn); } .state.retired { background:var(--line); color:var(--sub); }
+  .next { margin-top:10px; font-size:14px; }
+  .next .fix { color:var(--sub); }
+  .facts { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; font-size:12px; color:var(--sub); }
+  .facts span { background:var(--bg); border-radius:6px; padding:2px 8px; }
+  details { margin-top:10px; font-size:14px; }
+  summary { cursor:pointer; color:var(--sub); font-size:13px; }
+  details ul { margin:8px 0 0; padding-left:18px; }
+  details li { margin:4px 0; }
+  details .fix { color:var(--sub); font-size:13px; }
+  .retired-list { margin-top:22px; color:var(--sub); font-size:14px; }
+  footer { margin-top:36px; font-size:13px; color:var(--sub); }
+  footer a { color:inherit; }
+  .err { background:var(--red-soft); color:var(--red); padding:14px 16px; border-radius:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>내 서비스 상태</h1>
+    <div class="meta" id="checked">불러오는 중…</div>
+  </header>
+  <div class="summary" id="summary"></div>
+
+  <section>
+    <h2>오늘 할 일</h2>
+    <div class="todo"><ol id="todo"></ol></div>
+  </section>
+
+  <section>
+    <h2>서비스</h2>
+    <div class="grid" id="cards"></div>
+    <div class="retired-list" id="retired"></div>
+  </section>
+
+  <footer>
+    매일 09:17(KST) 자동 점검 · 서비스 추가/수정은 <code>services.json</code><br>
+    <a href="https://github.com/leehayoni/ops/actions/workflows/ops-check.yml" target="_blank" rel="noopener">지금 다시 점검하기 (Run workflow)</a> ·
+    <a href="https://github.com/leehayoni/ops/issues?q=is%3Aopen+label%3Aops" target="_blank" rel="noopener">열린 ops 이슈</a>
+  </footer>
+</div>
+
+<script>
+const LABEL = { fail:'문제', warn:'주의', ok:'정상', retired:'접음' };
+const ORDER = { fail:0, warn:1, ok:2, retired:3 };
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+function ago(iso){
+  const h = (Date.now() - new Date(iso)) / 36e5;
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))}분 전`;
+  if (h < 48) return `${Math.round(h)}시간 전`;
+  return `${Math.round(h / 24)}일 전`;
+}
+
+function render(data){
+  const checked = document.getElementById('checked');
+  const kst = new Date(data.checkedAt).toLocaleString('ko-KR', { timeZone:'Asia/Seoul', month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  const hours = (Date.now() - new Date(data.checkedAt)) / 36e5;
+  checked.textContent = `마지막 점검 ${kst} (${ago(data.checkedAt)})` + (hours > 30 ? ' · 점검이 하루 넘게 안 돌았어요' : '');
+  if (hours > 30) checked.classList.add('stale');
+
+  const rs = data.results.map(r => ({ ...r, state: r.state || 'ok' }));
+  const active = rs.filter(r => r.state !== 'retired').sort((a, b) => ORDER[a.state] - ORDER[b.state]);
+  const retired = rs.filter(r => r.state === 'retired');
+
+  const count = s => active.filter(r => r.state === s).length;
+  const sum = document.getElementById('summary');
+  [['fail','🔴 문제'],['warn','🟡 주의'],['ok','🟢 정상']].forEach(([s, t]) => sum.appendChild(el('span', 'pill', `${t} ${count(s)}`)));
+
+  const todo = document.getElementById('todo');
+  const tasks = active.filter(r => r.next).sort((a, b) => ORDER[a.next.level] - ORDER[b.next.level]);
+  if (!tasks.length) todo.appendChild(el('div', 'empty', '오늘은 할 일이 없어요. 전부 정상입니다.'));
+  tasks.forEach(r => {
+    const li = el('li'); li.appendChild(el('span', `dot ${r.next.level}`));
+    const body = el('div'); const t = el('div'); t.appendChild(el('b', null, r.name)); t.append(` — ${r.next.msg}`);
+    body.append(t, el('div', 'fix', `→ ${r.next.fix}`)); li.appendChild(body); todo.appendChild(li);
+  });
+
+  const cards = document.getElementById('cards');
+  active.forEach(r => {
+    const c = el('article', `card ${r.state}`);
+    const row = el('div', 'row'); row.appendChild(el('span', `dot ${r.state}`));
+    const h = el('h3'); const a = el('a', null, r.name); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; h.appendChild(a);
+    row.append(h, el('span', `state ${r.state}`, LABEL[r.state])); c.appendChild(row);
+
+    if (r.next) { const n = el('div', 'next'); n.append(r.next.msg); n.appendChild(el('div', 'fix', `→ ${r.next.fix}`)); c.appendChild(n); }
+
+    const facts = el('div', 'facts');
+    (r.pages || []).forEach(p => facts.appendChild(el('span', null, `${p.path} ${p.status || '실패'} · ${p.ms}ms`)));
+    (r.api || []).forEach(p => facts.appendChild(el('span', null, `API ${p.name} ${p.status || '실패'}`)));
+    (r.portals || []).forEach(p => facts.appendChild(el('span', null, `${p.name}: ${({review:'심사 중',live:'출시됨',rejected:'반려',draft:'준비 중'})[p.status] || p.status}`)));
+    if (r.repo) facts.appendChild(el('span', null, `최근 커밋 ${(r.repo.lastCommit || '-').slice(0, 10)} · 신고 ${r.repo.openUserIssues}건`));
+    c.appendChild(facts);
+
+    const others = (r.findings || []);
+    if (others.length) {
+      const d = el('details'); d.appendChild(el('summary', null, `점검 결과 ${others.length}건 보기`));
+      const ul = el('ul');
+      others.forEach(f => { const li = el('li'); li.append(`${({fail:'🔴',warn:'🟡',info:'⚪'})[f.level]} ${f.msg}`); if (f.fix) li.appendChild(el('div', 'fix', `→ ${f.fix}`)); ul.appendChild(li); });
+      d.appendChild(ul); c.appendChild(d);
+    }
+    cards.appendChild(c);
+  });
+
+  if (retired.length) document.getElementById('retired').textContent = `접은 서비스: ${retired.map(r => r.name).join(', ')}`;
+}
+
+fetch('status.json', { cache:'no-store' })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(e => { const d = el('div', 'err', `status.json을 읽지 못했어요 (${e.message}). 점검이 한 번 이상 돌았는지 확인하세요.`); document.querySelector('.wrap').insertBefore(d, document.getElementById('summary')); document.getElementById('checked').textContent = ''; });
+</script>
+</body>
+</html>

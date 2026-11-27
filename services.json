@@ -1,5 +1,5 @@
 {
-  "_설명": "운영 대상 서비스 목록. 새 서비스를 배포하면 여기에 한 줄 추가한다. status: active | retired. money: none | donation | affiliate | ads | paid",
+  "_설명": "운영 대상 서비스 목록. 새 서비스를 배포하면 여기에 한 줄 추가한다. status: active | retired. money: none | donation | affiliate | ads | paid portals: [{name, status: draft|review|live|rejected, since, url, note}]. seo: true면 robots.txt·sitemap.xml·Search Console까지 점검.",
   "accounts": {
     "_설명": "GitHub 계정별로 비공개 리포를 읽을 토큰(ops 리포 Secrets 이름). 공개 리포는 토큰 없이 읽힌다.",
     "leehayoni": "LEEHAYONI_TOKEN",
@@ -55,6 +55,14 @@
           "name": "기록판",
           "path": "/api/scores"
         }
+      ],
+      "portals": [
+        {
+          "name": "CrazyGames",
+          "status": "review",
+          "since": "2026-11-27",
+          "url": "https://developer.crazygames.com"
+        }
       ]
     },
     {
@@ -100,7 +108,8 @@
           },
           "expectPath": "cost.total"
         }
-      ]
+      ],
+      "seo": true
     },
     {
       "id": "mulgil",

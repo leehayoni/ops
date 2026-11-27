@@ -2,6 +2,17 @@
 
 매일 09:17(KST) GitHub Actions가 `services.json`의 모든 서비스를 점검합니다. 비용 0원(공개 리포의 Actions는 무료).
 
+## 대시보드
+https://leehayoni.github.io/ops/ — 매일 점검 후 자동 갱신. 서비스별 신호등과 "오늘 할 일"을 한 화면에 보여줍니다.
+(GitHub → Settings → Pages → Deploy from a branch → `main` / `(root)` 로 켜져 있어야 합니다.)
+
+### 점검 항목 (2026-11-27 추가)
+- 방문자 측정: Vercel Web Analytics 스크립트가 404면 "꺼져 있음", 측정 도구가 아예 없으면 경고
+- 링크 미리보기: `og:image`가 없거나 이미지가 안 열리면 경고
+- 검색 등록(`"seo": true`인 서비스만): `robots.txt`, `sitemap.xml`, Search Console 기록(`"searchConsole": "날짜"`)
+- 게임 포털(`"portals"`): 심사 7일 넘으면 경고, 반려면 경고
+- 모든 경고에는 "다음 할 일(fix)"이 붙고, 서비스마다 가장 급한 1개가 대시보드 맨 위에 올라갑니다.
+
 ## 무엇을 보나
 - 페이지 응답(다운·느림), API 응답과 기대값
 - 배포본에 GA ID가 실제로 들어갔는지
