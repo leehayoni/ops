@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-26T08:18:34.244Z",
+  "checkedAt": "2026-11-27T04:49:09.725Z",
   "results": [
     {
       "id": "dolbom-map",
@@ -10,22 +10,20 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 180
+          "ms": 85
         }
       ],
       "api": [],
       "findings": [
         {
-          "level": "info",
-          "check": "ga",
-          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
-        },
-        {
           "level": "warn",
           "check": "repo-access",
           "msg": "리포 leehayoni/dolbom-map 읽기 실패(404) → 비공개라면 ops Secrets에 LEEHAYONI_TOKEN 필요"
         }
-      ]
+      ],
+      "portals": [],
+      "state": "warn",
+      "next": null
     },
     {
       "id": "menu-photo-shop",
@@ -34,7 +32,9 @@
       "status": "retired",
       "pages": [],
       "api": [],
-      "findings": []
+      "findings": [],
+      "state": "retired",
+      "next": null
     },
     {
       "id": "forklift-run",
@@ -45,33 +45,43 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 123
+          "ms": 30
         }
       ],
       "api": [
         {
           "name": "커피 버튼",
           "status": 200,
-          "ms": 669
+          "ms": 645
         },
         {
           "name": "기록판",
           "status": 200,
-          "ms": 649
+          "ms": 553
         }
       ],
       "findings": [
         {
           "level": "info",
-          "check": "ga",
-          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+          "check": "portal:CrazyGames",
+          "msg": "CrazyGames 심사 중 (0일째)"
         },
         {
           "level": "warn",
           "check": "repo-access",
           "msg": "리포 leehayoni/forklift-run 읽기 실패(404) → 비공개라면 ops Secrets에 LEEHAYONI_TOKEN 필요"
         }
-      ]
+      ],
+      "portals": [
+        {
+          "name": "CrazyGames",
+          "status": "review",
+          "since": "2026-11-27",
+          "url": "https://developer.crazygames.com"
+        }
+      ],
+      "state": "warn",
+      "next": null
     },
     {
       "id": "kimjang",
@@ -82,22 +92,36 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 148
+          "ms": 44
         }
       ],
       "api": [],
       "findings": [
         {
-          "level": "info",
-          "check": "ga",
-          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+          "level": "warn",
+          "check": "analytics-off",
+          "msg": "Vercel Web Analytics가 꺼져 있음 (스크립트 404) → 방문자 수가 0으로 쌓이는 중",
+          "fix": "Vercel → 이 프로젝트 → Analytics 탭 → Enable (무료)"
+        },
+        {
+          "level": "warn",
+          "check": "og-image",
+          "msg": "링크 미리보기 이미지(og:image)가 없음 → 카톡·Threads에 공유하면 글자만 보임",
+          "fix": "1200×630 이미지를 만들어 <meta property=\"og:image\" content=\"https://…/og.png\"> 추가"
         },
         {
           "level": "info",
           "check": "no-repo",
           "msg": "GitHub 리포 없음 → 코드 백업·피드백 이슈 수집이 안 됨"
         }
-      ]
+      ],
+      "portals": [],
+      "state": "warn",
+      "next": {
+        "level": "warn",
+        "msg": "Vercel Web Analytics가 꺼져 있음 (스크립트 404) → 방문자 수가 0으로 쌓이는 중",
+        "fix": "Vercel → 이 프로젝트 → Analytics 탭 → Enable (무료)"
+      }
     },
     {
       "id": "goleu",
@@ -108,41 +132,55 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 76
+          "ms": 108
         },
         {
           "path": "/build",
           "status": 200,
-          "ms": 128
+          "ms": 39
         },
         {
           "path": "/llm-cost",
           "status": 200,
-          "ms": 21
+          "ms": 6
         }
       ],
       "api": [
         {
           "name": "스택 추천 API",
           "status": 200,
-          "ms": 115,
+          "ms": 130,
           "asOf": "2026-11-23"
         }
       ],
       "findings": [
         {
+          "level": "info",
+          "check": "search-console",
+          "msg": "Google Search Console 등록 여부가 services.json에 기록돼 있지 않음",
+          "fix": "등록·인증했으면 services.json에 \"searchConsole\": \"YYYY-MM-DD\" 추가"
+        },
+        {
           "level": "warn",
           "check": "policy",
-          "msg": "Vercel Hobby(비상업 전용)에서 수익 모델 'affiliate' 운영 중 → 프로젝트 정지 위험. Cloudflare Pages 이전 필요"
+          "msg": "Vercel Hobby(비상업 전용)에서 수익 모델 'affiliate' 운영 중 → 프로젝트 정지 위험",
+          "fix": "Cloudflare Pages(무료, 상업 이용 가능)로 이전"
         }
       ],
+      "portals": [],
       "repo": {
         "name": "arklyonoff-code/Goleu-AI",
         "private": false,
-        "lastCommit": "2026-11-25T07:41:29Z",
+        "lastCommit": "2026-11-27T02:33:01Z",
         "openUserIssues": 0,
         "newUserIssues7d": 0,
         "issues": []
+      },
+      "state": "warn",
+      "next": {
+        "level": "warn",
+        "msg": "Vercel Hobby(비상업 전용)에서 수익 모델 'affiliate' 운영 중 → 프로젝트 정지 위험",
+        "fix": "Cloudflare Pages(무료, 상업 이용 가능)로 이전"
       }
     },
     {
@@ -154,17 +192,19 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 342
+          "ms": 49
         }
       ],
       "api": [],
       "findings": [
         {
-          "level": "info",
-          "check": "ga",
-          "msg": "GA 미설정 (방문 수는 Vercel/Cloudflare Analytics로만 확인)"
+          "level": "warn",
+          "check": "analytics-off",
+          "msg": "Vercel Web Analytics가 꺼져 있음 (스크립트 404) → 방문자 수가 0으로 쌓이는 중",
+          "fix": "Vercel → 이 프로젝트 → Analytics 탭 → Enable (무료)"
         }
       ],
+      "portals": [],
       "repo": {
         "name": "leehayoni/mulgil-quest",
         "private": false,
@@ -172,6 +212,12 @@
         "openUserIssues": 0,
         "newUserIssues7d": 0,
         "issues": []
+      },
+      "state": "warn",
+      "next": {
+        "level": "warn",
+        "msg": "Vercel Web Analytics가 꺼져 있음 (스크립트 404) → 방문자 수가 0으로 쌓이는 중",
+        "fix": "Vercel → 이 프로젝트 → Analytics 탭 → Enable (무료)"
       }
     }
   ]
