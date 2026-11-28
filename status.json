@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-27T08:34:41.901Z",
+  "checkedAt": "2026-11-28T07:49:44.592Z",
   "results": [
     {
       "id": "dolbom-map",
@@ -10,7 +10,7 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 225
+          "ms": 191
         }
       ],
       "api": [],
@@ -56,32 +56,26 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 160
+          "ms": 116
         }
       ],
       "api": [
         {
           "name": "커피 버튼",
           "status": 200,
-          "ms": 659
+          "ms": 801
         },
         {
           "name": "기록판",
           "status": 200,
-          "ms": 601
+          "ms": 855
         }
       ],
       "findings": [
         {
           "level": "info",
           "check": "portal:CrazyGames",
-          "msg": "CrazyGames 심사 중 (0일째)"
-        },
-        {
-          "level": "fail",
-          "check": "user-errors",
-          "msg": "사용자 신고 에러/다운 이슈 1건 열림 (leehayoni/forklift-run)",
-          "fix": "GitHub 이슈 확인"
+          "msg": "CrazyGames 심사 중 (1일째)"
         }
       ],
       "portals": [
@@ -95,18 +89,10 @@
       "repo": {
         "name": "leehayoni/forklift-run",
         "private": true,
-        "lastCommit": "2026-11-20T06:58:39Z",
-        "openUserIssues": 2,
-        "newUserIssues7d": 1,
+        "lastCommit": "2026-11-28T04:48:33Z",
+        "openUserIssues": 1,
+        "newUserIssues7d": 0,
         "issues": [
-          {
-            "title": "오류: Uncaught Error: Error creating WebGL context. @ https://cdn.…",
-            "labels": [
-              "error"
-            ],
-            "created": "2026-11-24T07:33:27Z",
-            "url": "https://github.com/leehayoni/forklift-run/issues/2"
-          },
           {
             "title": "피드백: 너무 잘만들었네요!",
             "labels": [
@@ -117,12 +103,8 @@
           }
         ]
       },
-      "state": "fail",
-      "next": {
-        "level": "fail",
-        "msg": "사용자 신고 에러/다운 이슈 1건 열림 (leehayoni/forklift-run)",
-        "fix": "GitHub 이슈 확인"
-      }
+      "state": "ok",
+      "next": null
     },
     {
       "id": "kimjang",
@@ -133,7 +115,7 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 173
+          "ms": 191
         }
       ],
       "api": [],
@@ -173,24 +155,24 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 152
+          "ms": 153
         },
         {
           "path": "/build",
           "status": 200,
-          "ms": 51
+          "ms": 145
         },
         {
           "path": "/llm-cost",
           "status": 200,
-          "ms": 44
+          "ms": 91
         }
       ],
       "api": [
         {
           "name": "스택 추천 API",
           "status": 200,
-          "ms": 105,
+          "ms": 152,
           "asOf": "2026-11-23"
         }
       ],
@@ -233,7 +215,7 @@
         {
           "path": "/",
           "status": 200,
-          "ms": 187
+          "ms": 212
         }
       ],
       "api": [],
